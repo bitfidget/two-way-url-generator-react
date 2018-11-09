@@ -1,0 +1,214 @@
+/*! Lists v3.0.0 WBC */
+/*
+ * lists mixins
+ *
+ */
+
+@brand: WBC;
+
+
+//////////////////////////////////////| lists mixin
+._lists( @brand ) {
+
+	/*
+	 *  SETTINGS
+	 */
+	.getBrand() {
+		@lists-bulletsize: 8px; //dot size
+		@lists-graphicsize: 16px; //bullets, ticks and carets
+		@lists-iconsize: 18px;
+		@lists-paddingleft: 19px;
+		@lists-iconpaddingleft: 23px;
+	}
+	.getBrand() when (@brand = BOM) {
+		// @test: 'BOM';
+	}
+	.getBrand() when (@brand = BSA) {
+		// @test: 'BSA';
+	}
+	.getBrand() when (@brand = STG) {
+		// @test: 'STG';
+	}
+	.getBrand() when (@brand = WBC) {
+		// @test: 'WBC';
+	}
+	.getBrand() when (@brand = WBG) {
+		// @test: 'WBG';
+	}
+	.getBrand() when (@brand = BT) {
+		// @test: 'BT';
+	}
+	.getBrand();
+
+
+
+	// Ordered lists
+	ol.lists {
+		padding: 0 0 0 1.9em;
+	}
+
+
+	// Unordered lists
+	ul.lists {
+		padding: 0;
+		list-style: none;
+
+		> li {
+			display: block;
+			padding-left: @lists-paddingleft;
+			position: relative;
+
+			// Bullet
+			&:after {
+				content: '';
+				position: absolute;
+				left: (@lists-graphicsize / 2) - (@lists-bulletsize / 2);
+				top: 6px;
+				display: block;
+				width: @lists-bulletsize;
+				height: @lists-bulletsize;
+				border-radius: 50%;
+				border: 1px solid @color-Primary;
+				background-color: @color-Primary;
+			}
+
+			> .lists > li:after {
+				background-color: transparent; //no circle fill
+			}
+		}
+
+		// Bullet colors
+		&.lists-hero > li:after {
+			border-color: @color-Hero;
+			background-color: @color-Hero;
+		}
+		&.lists-neutral > li:after {
+			border-color: @color-Neutral;
+			background-color: @color-Neutral;
+		}
+	}
+
+	// All lists
+	.lists {
+		margin: 0;
+
+		> li {
+			margin: 6px 0;
+		}
+
+
+		// NB. The following are nested inside a `.lists` class to match `ul.lists` specificity
+
+		// Tick and Linklist
+		&.lists-tick,
+		&.lists-linklist {
+			> li {
+
+				// Graphic
+				&:after {
+					background-size: contain;
+					border-radius: 0; //reset
+					border: none; //reset
+					background-color: transparent; //reset
+					left: 0;
+					width: @lists-graphicsize;
+					height: @lists-graphicsize;
+					font-size: @lists-graphicsize;
+					top: 2px; //tweak
+				}
+			}
+		}
+
+		// Link lists
+		&.lists-linklist {
+			> li a {
+				color: @color-Text;
+				text-decoration: none;
+
+				&:hover {
+					text-decoration: underline;
+				}
+
+				.icons-background {
+					fill: @color-Text;
+				}
+			}
+		}
+
+		// Icon lists
+		&.lists-icon {
+			> li {
+				padding-left: @lists-iconpaddingleft;
+				position: relative;
+
+				// Graphic
+				&:after {
+					display: none; //hide normal graphic
+				}
+
+				// Icon
+				> .icon {
+					position: absolute;
+					width: @lists-iconsize;
+					height: @lists-iconsize;
+					font-size: @lists-iconsize;
+					background-size: contain;
+					left: 0;
+					top: 0;
+				}
+			}
+
+			&.lists-primary > li {
+				> .icon .icons-background {
+					fill: @color-Primary;
+				}
+			}
+			&.lists-hero > li {
+				> .icon .icons-background {
+					fill: @color-Hero;
+				}
+			}
+			&.lists-neutral > li {
+				> .icon .icons-background {
+					fill: @color-Neutral;
+				}
+			}
+		}
+	}
+
+	// Large option
+	.lists-large {
+		> li {
+			margin-top: 12px; //increase item gap
+			margin-bottom: 12px; //increase item gap
+		}
+	}
+
+
+
+	//////////////////////////////////////| PRINT
+	@media print {
+		.lists {
+			> li:after,
+			&.lists-hero > li:after,
+			&.lists-neutral > li:after,
+			&.lists-linklist > li:after {
+				border-color: #000;
+				background-color: #000;
+			}
+
+			&.lists-linklist > li:after {
+				background-color: transparent;
+			}
+
+			&.lists-tick > li:after {
+				background: none;
+				content: "\2713";
+			}
+		}
+	}
+}
+
+
+//////////////////////////////////////| lists
+._lists( @brand );

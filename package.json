@@ -18,8 +18,8 @@
         "build-css": "node-less-chokidar src/styles -o src/",
         "watch-css": "npm run build-css && node-less-chokidar src/styles -o src/ --watch --recursive",
         "start-js": "react-scripts start",
-        "start": "sh -ac '. .env; NODE_PATH=src/ npm-run-all -p watch-css start-js'",
-        "local": "sh -ac '. .env; NODE_PATH=src/ npm-run-all -p watch-css start-js'",
+        "start": "NODE_PATH=src/ npm-run-all -p watch-css start-js",
+        "local": "NODE_PATH=src/ npm-run-all -p watch-css start-js",
         "build-js": "react-scripts build",
         "build": "NODE_PATH=src/ npm-run-all build-css build-js",
         "serve": "serve dist -p 3000",
@@ -27,7 +27,7 @@
         "format": "prettier --write '**/*.{js,jsx}'"
     },
     "devDependencies": {
-        "eslint": "^4.17.0",
+        "eslint": "^5.6.0",
         "eslint-config-airbnb": "^16.1.0",
         "eslint-config-prettier": "^2.9.0",
         "eslint-config-react-tools": "1.x.x",
@@ -36,7 +36,7 @@
         "eslint-plugin-prettier": "^2.6.0",
         "eslint-plugin-react": "^7.6.1",
         "prettier": "^1.10.2",
-        "serve": "^6.1.0",
+        "serve": "^7.0.0",
         "uuid": "^3.2.1"
     },
     "eslintConfig": {

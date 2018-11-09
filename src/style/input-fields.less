@@ -1,0 +1,244 @@
+/*! Input-Fields v3.0.0 WBC */
+/*
+ * input-fields mixins
+ *
+ */
+
+@brand: WBC;
+
+
+//////////////////////////////////////| input-fields mixin
+._input-fields( @brand ) {
+
+	/*
+	 *  SETTINGS
+	 */
+	.getBrand() {
+		@input-field-BorderRadius: 3px;
+	}
+	.getBrand() when (@brand = BOM) {
+		// @test: 'BOM';
+	}
+	.getBrand() when (@brand = BSA) {
+		// @test: 'BSA';
+	}
+	.getBrand() when (@brand = STG) {
+		// @test: 'STG';
+	}
+	.getBrand() when (@brand = WBC) {
+		// @test: 'WBC';
+	}
+	.getBrand() when (@brand = WBG) {
+		// @test: 'WBG';
+	}
+	.getBrand() when (@brand = BT) {
+		// @test: 'BT';
+	}
+	.getBrand();
+
+
+
+	//////////////////////////////////////| INPUTS
+	.input-field {
+		display: block;
+		width: 100%;
+		appearance: none;
+		line-height: 1.5;
+		font-weight: 400;
+		color: @color-Text;
+		background-color: #fff;
+		border: 1px solid @color-Border;
+		border-radius: @input-field-BorderRadius;
+		transition: border 0.2s ease;
+		padding: 5px 12px;
+		font-size: 16px;
+		height: 36px;
+
+		// Placeholder
+	  &::placeholder {
+			font-weight: 300;
+			color: @color-F-50;
+			opacity: 1; // Override Firefox's unusual default opacity
+		}
+
+		textarea& {
+			min-height: 60px;
+			vertical-align: top;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: @color-B;
+		}
+
+		// Disabled and read-only inputs
+		&:disabled,
+		&[readonly] {
+			background-color: @color-J;
+			color: @color-Muted;
+			cursor: not-allowed;
+			opacity: 1; // iOS fix for unreadable disabled content
+		}
+	}
+
+	// Sizing
+	.input-field-small,
+	.input-group-small .input-field {
+		padding: 3px 9px 4px;
+		font-size: 14px;
+		height: 30px;
+
+		textarea& {
+			min-height: 54px;
+		}
+	}
+	.input-field-large,
+	.input-group-large .input-field {
+		padding: 8px 15px;
+		font-size: 16px;
+		height: 42px;
+
+		textarea& {
+			min-height: 66px;
+		}
+	}
+	.input-field-xlarge,
+	.input-group-xlarge .input-field {
+		padding: 9px 18px 10px;
+		font-size: 18px;
+		height: 48px;
+
+		textarea& {
+			min-height: 72px;
+		}
+	}
+
+
+	//////////////////////////////////////| SELECTS
+	// Nb. Caret is supplied via Grunticon (see grunticon.json)
+	select.input-field {
+		._select-size( medium ); //default
+
+		// Remove the caret on `<select>`s in IE10+.
+		&::-ms-expand {
+			display: none;
+		}
+
+		.ie8 &,
+		.ie9 & {
+			background-image: none; //remove caret
+		}
+	}
+
+	// Sizing
+	select.input-field-small,
+	.input-group-small select.input-field {
+		._select-size( small );
+	}
+	select.input-field-large,
+	.input-group-large select.input-field {
+		._select-size( large );
+	}
+	select.input-field-xlarge,
+	.input-group-xlarge select.input-field {
+		._select-size( xlarge );
+	}
+
+
+
+
+	//////////////////////////////////////| FIELDSET
+	fieldset {
+		width: auto;
+		border: 0 none;
+		padding: 0 0 21px 0;
+		margin: 0;
+		min-width: 0;
+
+		.legend,
+		legend {
+			display: block;
+			width: 100%;
+			padding: 0;
+			margin-bottom: 21px;
+			font-size: 21px;
+			line-height: inherit;
+			color: @color-Muted;
+			border: 0;
+			border-bottom: 1px solid @color-Border;
+		}
+	}
+
+
+
+
+	//////////////////////////////////////| FORMS
+	// Inline forms
+	.form-inline {
+
+		// Kick in the inline
+		@media (min-width: @screen-sm) {
+			.form-group,
+			.input-field {
+				display: inline-block;
+				vertical-align: middle;
+			}
+			.form-group {
+				margin-bottom: 0; //reset
+			}
+			.input-field {
+				width: auto; //use default input element’s width
+			}
+		}
+	}
+
+	// Form row grouping; provides row gap for forms
+	.form-group {
+		margin-bottom: 18px;
+	}
+
+
+
+
+	//////////////////////////////////////| PRINT
+	@media print {
+		select.input-field {
+			background-color: transparent !important;
+
+			&:disabled {
+				background-color: #fff !important;
+			}
+		}
+	}
+}
+
+
+._select-size( @size ) {
+	.getSize() when (@size = small) {
+		._calc-caret( 9px );
+	}
+	.getSize() when (@size = medium) {
+		._calc-caret( 12px );
+	}
+	.getSize() when (@size = large) {
+		._calc-caret( 15px );
+	}
+	.getSize() when (@size = xlarge) {
+		._calc-caret( 18px );
+	}
+	.getSize();
+}
+
+._calc-caret( @padding, @gap: 8px, @caretwidth: 14px) {
+	background-position: right @padding center;
+	padding-right: @padding + @caretwidth + @gap;
+
+	.ie8 &,
+	.ie9 & {
+		padding-right: @padding;
+	}
+}
+
+
+//////////////////////////////////////| input-fields
+._input-fields( @brand );
