@@ -1,50 +1,101 @@
 import React, { Component } from 'react'
-// import './App.css';
+import ReactDOM from 'react-dom'
+import { DragDropContext } from 'react-beautiful-dnd'
 import './style/gui.css'
 
 // Components
 import ControlledRow from 'components/ControlledRow'
 import DragDropSection from 'components/DragDropSection'
+import DragDropColumn from 'components/DragDropColumn'
 
 // feeds
-import contentSnippetsJson from 'feed/snippets'
-import contentSummariesJson from 'feed/summaries'
+import snippetsStructured from 'feed/snippetsStructured'
+// import contentSummariesJson from 'feed/summaries'
 
 class App extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            loadedSummaries: contentSummariesJson,
-            loadedSnippets: contentSnippetsJson,
-            selectedSnippets: []
+            snippetsStructured: snippetsStructured
         }
 
-        this.handleSummaryChange = this.handleSummaryChange.bind(this)
-        this.handleSnippetChange = this.handleSnippetChange.bind(this)
-
-        this.handleListUpdate = this.handleListUpdate.bind(this)
-
+        this.onDragEnd = this.onDragEnd.bind(this)
     }
 
-    handleSummaryChange = (e) => {
-        let loadedSummaries = this.state.loadedSummaries
-        loadedSummaries[e.target.id].checked = !loadedSummaries[e.target.id].checked
+
+    onDragEnd = (result) => {
+        const {destination, source, draggableId} = result
+
+        // if no destination, do nothing
+        if (!destination) {
+            return
+        }
+
+        // if no change, do nothing
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return
+        }
+
+        const start = this.state.snippetsStructured.columns[source.droppableId]
+        const finish = this.state.snippetsStructured.columns[destination.droppableId]
+
+        // moving within same column
+        if (start === finish) {
+
+            const newItemIds = Array.from(start.itemIds)
+            newItemIds.splice(source.index, 1)
+            newItemIds.splice(destination.index, 0, draggableId)
+
+            const newColumn = {
+                ...start,
+                itemIds: newItemIds,
+                face: 'shite'
+            }
+
+            const newStateSnippetsStructured = {
+                ...this.state.snippetsStructured,
+                columns: {
+                    ...this.state.snippetsStructured.columns,
+                    [newColumn.id]: newColumn
+                }
+            }
+            this.setState({
+                snippetsStructured: newStateSnippetsStructured
+            })
+            return
+        }
+
+        // moving to another column
+        const startItemIds = Array.from(start.itemIds)
+        startItemIds.splice(source.index, 1)
+        const newStart = {
+            ...start,
+            itemIds: startItemIds
+        }
+
+        const finishItemIds = Array.from(finish.itemIds)
+        finishItemIds.splice(destination.index, 0, draggableId)
+        const newFinish = {
+            ...finish,
+            itemIds: finishItemIds
+        }
+
+        const newStateSnippetsStructured = {
+            ...this.state.snippetsStructured,
+            columns: {
+                ...this.state.snippetsStructured.columns,
+                [newStart.id]: newStart,
+                [newFinish.id]: newFinish
+            }
+        }
+
         this.setState({
-            loadedSummaries: loadedSummaries
+            snippetsStructured: newStateSnippetsStructured
         })
-    }
-
-    handleSnippetChange = (e) => {
-        let loadedSnippets = this.state.loadedSnippets
-        loadedSnippets[e.target.id].checked = !loadedSnippets[e.target.id].checked
-        this.setState({
-            loadedSnippets: loadedSnippets
-        })
-    }
-
-    handleListUpdate = (e) => {
-
     }
 
     render() {
@@ -54,45 +105,24 @@ class App extends Component {
                     CAI URL/Brief Generator
                 </header>
                 <main>
-                    <div className='section summary'>
-                        <h2>Summary</h2>
+                    <DragDropContext
+                        onDragEnd={this.onDragEnd}
+                    >
                         {
-                            this.state.loadedSummaries.map((row, i) => (
-                                <ControlledRow
-                                    key={i}
-                                    id={i}
-                                    rowContent={{
-                                        "title": row.intent,
-                                        "content": row.content
-                                    }}
-                                    rowChecked={row.checked}
-                                    controlFunc={this.handleSummaryChange}
-                                />
-                            ))
+                            this.state.snippetsStructured.columnOrder.map(columnId => {
+                                const column = this.state.snippetsStructured.columns[columnId]
+                                const items = column.itemIds.map(itemId => this.state.snippetsStructured.items[itemId])
+
+                                return (
+                                    <DragDropColumn
+                                        key={column.id}
+                                        column={column}
+                                        items={items}
+                                    />
+                                )
+                            })
                         }
-                    </div>
-                    <div className='section snippet'>
-                        <h2>Snippets</h2>
-                        {
-                            this.state.loadedSnippets.map((row, i) => (
-                                <ControlledRow
-                                    key={i}
-                                    id={i}
-                                    rowContent={{
-                                        "title": row.title,
-                                        "content": row.content
-                                    }}
-                                    rowChecked={row.checked}
-                                    controlFunc={this.handleSnippetChange}
-                                />
-                            ))
-                        }
-                    </div>
-                    <DragDropSection
-                        items={this.state.loadedSnippets}
-                        selected={this.state.selectedSnippets}
-                        controlFunc={this.handleListUpdate}
-                    />
+                    </ DragDropContext>
                 </main>
             </div>
         )
