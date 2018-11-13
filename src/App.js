@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 // import './App.css';
-import 'style/gui.css'
+import './style/gui.css'
 
 // Components
 import ControlledRow from 'components/ControlledRow'
+import DragDropSection from 'components/DragDropSection'
 
 // feeds
 import contentSnippetsJson from 'feed/snippets'
@@ -14,29 +15,36 @@ class App extends Component {
         super(props)
 
         this.state = {
-            stateSummaries: contentSummariesJson,
-            stateSnippets: contentSnippetsJson
+            loadedSummaries: contentSummariesJson,
+            loadedSnippets: contentSnippetsJson,
+            selectedSnippets: []
         }
 
         this.handleSummaryChange = this.handleSummaryChange.bind(this)
         this.handleSnippetChange = this.handleSnippetChange.bind(this)
 
+        this.handleListUpdate = this.handleListUpdate.bind(this)
+
     }
 
     handleSummaryChange = (e) => {
-        let stateSummaries = this.state.stateSummaries
-        stateSummaries[e.target.id].checked = !stateSummaries[e.target.id].checked
+        let loadedSummaries = this.state.loadedSummaries
+        loadedSummaries[e.target.id].checked = !loadedSummaries[e.target.id].checked
         this.setState({
-            stateSummaries: stateSummaries
+            loadedSummaries: loadedSummaries
         })
     }
 
     handleSnippetChange = (e) => {
-        let stateSnippets = this.state.stateSnippets
-        stateSnippets[e.target.id].checked = !stateSnippets[e.target.id].checked
+        let loadedSnippets = this.state.loadedSnippets
+        loadedSnippets[e.target.id].checked = !loadedSnippets[e.target.id].checked
         this.setState({
-            stateSnippets: stateSnippets
+            loadedSnippets: loadedSnippets
         })
+    }
+
+    handleListUpdate = (e) => {
+
     }
 
     render() {
@@ -49,7 +57,7 @@ class App extends Component {
                     <div className='section summary'>
                         <h2>Summary</h2>
                         {
-                            this.state.stateSummaries.map((row, i) => (
+                            this.state.loadedSummaries.map((row, i) => (
                                 <ControlledRow
                                     key={i}
                                     id={i}
@@ -66,7 +74,7 @@ class App extends Component {
                     <div className='section snippet'>
                         <h2>Snippets</h2>
                         {
-                            this.state.stateSnippets.map((row, i) => (
+                            this.state.loadedSnippets.map((row, i) => (
                                 <ControlledRow
                                     key={i}
                                     id={i}
@@ -80,6 +88,11 @@ class App extends Component {
                             ))
                         }
                     </div>
+                    <DragDropSection
+                        items={this.state.loadedSnippets}
+                        selected={this.state.selectedSnippets}
+                        controlFunc={this.handleListUpdate}
+                    />
                 </main>
             </div>
         )
