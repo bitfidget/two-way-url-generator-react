@@ -14,7 +14,7 @@
         "react-scripts": "2.1.1"
     },
     "scripts": {
-        "test": "react-scripts test",
+        "test": "NODE_PATH=src/ react-scripts test",
         "eject": "react-scripts eject",
         "build-css": "node-less-chokidar src/styles -o src/",
         "watch-css": "npm run build-css && node-less-chokidar src/styles -o src/ --watch --recursive",

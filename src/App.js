@@ -19,7 +19,6 @@ class App extends Component {
 
         this.handleSummaryChange = this.handleSummaryChange.bind(this)
         this.handleSnippetChange = this.handleSnippetChange.bind(this)
-
     }
 
     // componentWillMount() {
