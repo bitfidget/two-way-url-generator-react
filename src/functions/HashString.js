@@ -1,9 +1,10 @@
 import { Base64 } from 'js-base64'
 
-const HashString = (string, decrypt) => {
-    if (decrypt) {
+const HashString = {
+    decode: function (string) {
         return Base64.decode(string)
-    } else {
+    },
+    encode: function (string) {
         return Base64.encode(string)
     }
 }

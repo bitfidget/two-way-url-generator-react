@@ -21,7 +21,7 @@ const snippetsStructured = {
             'id': 'col1',
             'title': 'selected',
             'itemIds': [
-                'snip2'
+                
             ]
         },
         'col2': {
@@ -29,6 +29,7 @@ const snippetsStructured = {
             'title': 'available',
             'itemIds': [
                 'snip1',
+                'snip2',
                 'snip3'
             ]
         }
